@@ -25,6 +25,10 @@ class ApparatusWindow: NSWindow {
 	}
 	
 	
+	override var canHide: Bool {
+		set { /* nope */ }
+		get { return false }
+	}
 	
 	
 	/*
@@ -41,6 +45,8 @@ class ApparatusWindow: NSWindow {
 		return false
 	}
 	*/
+	
+	
 	
 	override var backgroundColor: NSColor! {
 		set {
@@ -59,8 +65,7 @@ class ApparatusWindow: NSWindow {
 	private var refreshTimer: Timer!
 	
 	override init(contentRect: NSRect, styleMask style: NSWindowStyleMask, backing bufferingType: NSBackingStoreType, defer flag: Bool) {
-		super.init(contentRect: contentRect, styleMask: .borderless, backing: bufferingType, defer: false)
-		
+		super.init(contentRect: contentRect, styleMask: .borderless, backing: bufferingType, defer: flag)
 		
 		self.collectionBehavior = .stationary
 		self.backgroundColor = NSColor.black.withAlphaComponent(0.01)
@@ -68,14 +73,18 @@ class ApparatusWindow: NSWindow {
 		self.level = ApparatusWindowLevel
 		self.isMovableByWindowBackground = true
 		
-
-		////refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: {(t:Timer)->Void in
-			//self.refresh()
-		//})
-		connectToManager()
-
-		self.orderFrontRegardless()
 		
+		//windowController?.shouldCascadeWindows = false
+		//setFrameAutosaveName(representedFilename)
+		//windowController?.windowFrameAutosaveName = representedFilename
+		/*refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: {(t:Timer)->Void in
+			NSLog("\(self.frame.origin), visible: \(self.isVisible)")
+		})*/
+		connectToManager()
+		
+		//self.setFrameAutosaveName("Layout")
+		//self.orderFrontRegardless()
+		//setFrameUsingName("Layout")
 		
 	}
 	
@@ -102,10 +111,14 @@ class ApparatusWindow: NSWindow {
 	
 	func disableLayoutMode() {
 		NSLog("Exiting layout mode")
+		//saveFrame(usingName: "Layout")
+		//saveFrame(usingName: "Layout")
 		DispatchQueue.main.async {
 			self.isMovableByWindowBackground = false
 		}
 	}
+	
+	
 	
 	
 	// called periodically by the manager program to make sure gadgets are at the proper window level. 
