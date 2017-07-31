@@ -9,6 +9,7 @@
 import Cocoa
 
 
+let ApparatusWindowLevel: Int = Int(CGWindowLevelForKey(CGWindowLevelKey.desktopIconWindow))+1
 
 class ApparatusWindow: NSWindow {
 	
@@ -25,6 +26,8 @@ class ApparatusWindow: NSWindow {
 	
 	
 	
+	
+	/*
 	override var canBecomeMain: Bool {
 		return false
 	}
@@ -37,51 +40,87 @@ class ApparatusWindow: NSWindow {
 	override var isKeyWindow: Bool {
 		return false
 	}
+	*/
 	
-
+	override var backgroundColor: NSColor! {
+		set {
+			if(newValue.alphaComponent == 0) {
+				super.backgroundColor = NSColor.black.withAlphaComponent(0.01)
+			} else {
+				super.backgroundColor = newValue
+			}
+		}
+		get {
+			return super.backgroundColor
+		}
+	}
+	
+	
+	private var refreshTimer: Timer!
 	
 	override init(contentRect: NSRect, styleMask style: NSWindowStyleMask, backing bufferingType: NSBackingStoreType, defer flag: Bool) {
 		super.init(contentRect: contentRect, styleMask: .borderless, backing: bufferingType, defer: false)
 		
 		
-		// background color
-		self.backgroundColor = NSColor.black.withAlphaComponent(0.5)
-		
 		self.collectionBehavior = .stationary
-		
-		// hide from expose
-		//self.collectionBehavior.formUnion(.transient)
-		//self.collectionBehavior.subtract(.participatesInCycle)
-		//self.collectionBehavior.formUnion(.ignoresCycle)
-		
-		
+		self.backgroundColor = NSColor.black.withAlphaComponent(0.01)
 		// set level just above desktop icons
-		self.level = Int(CGWindowLevelForKey(CGWindowLevelKey.desktopIconWindow))+1
-		
+		self.level = ApparatusWindowLevel
 		self.isMovableByWindowBackground = true
 		
-		DistributedNotificationCenter.default().addObserver(self, selector: #selector(enableLayoutMode), name: ApparatusNotifiationName.widgetEnableLayoutMode, object: nil, suspensionBehavior: .deliverImmediately)
-		
-		DistributedNotificationCenter.default().addObserver(self, selector: #selector(disableLayoutMode), name: ApparatusNotifiationName.widgetDisableLayoutMode, object: nil, suspensionBehavior: .deliverImmediately)
-		
-		
 
+		////refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true, block: {(t:Timer)->Void in
+			//self.refresh()
+		//})
+		connectToManager()
+
+		self.orderFrontRegardless()
+		
+		
 	}
 	
+	deinit {
+		DistributedNotificationCenter.default().removeObserver(self)
+	}
+	
+	
+	private func connectToManager() {
+		// subscribe to messages
+		AddApparatusObserver(observer: self, selector: #selector(enableLayoutMode), name: .managerEnabledLayoutMode)
+		AddApparatusObserver(observer: self, selector: #selector(disableLayoutMode), name: .managerDisabledLayoutMode)
+		//AddApparatusObserver(observer: self, selector: #selector(refresh), name: .refresh)
+		PostApparatusNotification(name: .widgetLaunched)
+	}
 	
 	
 	func enableLayoutMode() {
-		self.isMovableByWindowBackground = true		
-		
+		NSLog("Entering layout mode")
+		DispatchQueue.main.async {
+			self.isMovableByWindowBackground = true
+		}
 	}
 	
 	func disableLayoutMode() {
-		self.isMovableByWindowBackground = false
+		NSLog("Exiting layout mode")
+		DispatchQueue.main.async {
+			self.isMovableByWindowBackground = false
+		}
 	}
 	
 	
-
-	
+	// called periodically by the manager program to make sure gadgets are at the proper window level. 
+	// - Sometimes the desktop does not want to play nice
+	/*
+	func refresh() {
+		DispatchQueue.main.async {
+			NSLog("\(self.isVisible)")
+			if(!self.isVisible) {
+				self.orderFrontRegardless()
+			}
+			
+		}
+	}
+	*/
 	
 	
 	

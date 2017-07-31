@@ -8,9 +8,27 @@
 
 import Cocoa
 
-public struct ApparatusNotifiationName {
-	public static let widgetManagerClosed: NSNotification.Name = NSNotification.Name(rawValue: "WidgetManagerClosed")
-	public static let widgetLaunched: NSNotification.Name = NSNotification.Name(rawValue: "WidgetLaunched")
-	public static let widgetEnableLayoutMode: NSNotification.Name = NSNotification.Name(rawValue: "WidgetEnableLayoutMode")
-	public static let widgetDisableLayoutMode: NSNotification.Name = NSNotification.Name(rawValue: "WidgetDisableLayoutMode")
+
+
+public enum ApparatusNotificationName: String {
+	case managerClosed = "WidgetManagerClosed"
+	case widgetLaunched = "WidgetLaunched"
+	case widgetClosed = "WidgetClosed"
+	case managerEnabledLayoutMode = "WidgetEnableLayoutMode"
+	case managerDisabledLayoutMode = "WidgetDisableLayoutMode"
+	case refresh = "WidgetRefreshSignal"
+}
+
+public enum ApparatusNotificationInfoKey: UInt8 {
+	case layoutModeEnabled = 0
+}
+
+
+public func AddApparatusObserver(observer: Any, selector: Selector, name: ApparatusNotificationName, object: String? = nil) {
+	DistributedNotificationCenter.default().addObserver(observer, selector: selector, name: Notification.Name(rawValue: name.rawValue), object: object, suspensionBehavior: .deliverImmediately)
+}
+
+
+public func PostApparatusNotification(name: ApparatusNotificationName, userInfo: [ApparatusNotificationInfoKey: Any]? = nil) {
+	DistributedNotificationCenter.default().postNotificationName(Notification.Name(rawValue: name.rawValue), object: nil, userInfo: userInfo, deliverImmediately: true)
 }

@@ -16,6 +16,8 @@ class StatusMenu : NSMenu {
 	private let notificationCenter: DistributedNotificationCenter = DistributedNotificationCenter.default()
 	private var layoutMenuItem: NSMenuItem!
 	
+	private var layoutMode: Bool = false
+	
 	init() {
 		super.init(title: "Widget Manager")
 		setup()
@@ -28,41 +30,62 @@ class StatusMenu : NSMenu {
 	private func setup() {
 	
 		self.addItem(NSMenuItem(title: "About", action: nil, keyEquivalent: ""))
+		
+		
 		layoutMenuItem = NSMenuItem(title: "Enter Layout Mode", action: #selector(enableLayoutMode), keyEquivalent: "")
 		layoutMenuItem.target = self
 		self.addItem(layoutMenuItem)
 		
+		let refreshItem = NSMenuItem(title: "Refresh", action: #selector(sendRefresh), keyEquivalent: "")
+		refreshItem.target = self
+		self.addItem(refreshItem)
+		
+		
 		self.addItem(NSMenuItem.separator())
 		self.addItem(NSMenuItem(title: "Quit", action: nil, keyEquivalent: ""))
 		
-		NSWorkspace.shared().launchApplication(withBundleIdentifier: "", options: .async, additionalEventParamDescriptor: nil, launchIdentifier: nil)
-		notificationCenter.addObserver(self, selector: #selector(widgetLaunched), name: ApparatusNotifiationName.widgetLaunched, object: nil)
+		//NSWorkspace.shared().launchApplication(withBundleIdentifier: "", options: .async, additionalEventParamDescriptor: nil, launchIdentifier: nil)
+		//notificationCenter.addObserver(self, selector: #selector(receivedLaunchNotification), name: ApparatusNotifiationName.widgetLaunched, object: nil)
 		
-		
+		AddApparatusObserver(observer: self, selector: #selector(receivedLaunchNotification), name: .widgetLaunched)
 		
 		
 	}
 	
 	
-	func widgetLaunched(notification: NSNotification) {
-		guard let infoDict: [String: AnyObject] = notification.object as? [String: AnyObject] else { return }
-		
+
+	
+	func sendRefresh() {
+		print("broadcasting refresh signal")
+		PostApparatusNotification(name: .refresh)
 	}
 	
 	
 	func enableLayoutMode() {
+		layoutMode = true
 		layoutMenuItem.title = "Exit Layout Mode"
 		layoutMenuItem.action = #selector(disableLayoutMode)
-		notificationCenter.post(name: ApparatusNotifiationName.widgetEnableLayoutMode, object: nil)
+		PostApparatusNotification(name: .managerEnabledLayoutMode);
 	}
 	
 	
 	func disableLayoutMode() {
+		layoutMode = false
 		layoutMenuItem.title = "Enter Layout Mode"
 		layoutMenuItem.action = #selector(enableLayoutMode)
-		notificationCenter.post(name: ApparatusNotifiationName.widgetDisableLayoutMode, object: nil)
+		PostApparatusNotification(name: .managerDisabledLayoutMode)
 	}
 
+	
+	func receivedLaunchNotification(notification: Notification) {
+		print("received launch notification")
+		if(layoutMode) {
+			enableLayoutMode()
+		} else {
+			disableLayoutMode()
+		}
+	}
+	
 }
 
 

@@ -30,7 +30,6 @@
 		A6B0ABB61F22B33500015C00 /* StatusMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B0ABAE1F22B20700015C00 /* StatusMenu.swift */; };
 		A6B0ABBA1F22B52D00015C00 /* Apparatus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B0AB8A1F22B12500015C00 /* Apparatus.framework */; };
 		A6B0ABBB1F22B52D00015C00 /* Apparatus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A6B0AB8A1F22B12500015C00 /* Apparatus.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A6DD89A01F22C48700020904 /* DSEG7Modern-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6DD899F1F22C48700020904 /* DSEG7Modern-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,7 +118,6 @@
 		A6B0ABAA1F22B17200015C00 /* ApparatusWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApparatusWindow.swift; sourceTree = "<group>"; };
 		A6B0ABAC1F22B1F600015C00 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A6B0ABAE1F22B20700015C00 /* StatusMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMenu.swift; sourceTree = "<group>"; };
-		A6DD899F1F22C48700020904 /* DSEG7Modern-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DSEG7Modern-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,7 +171,6 @@
 		A62C6D271F22BE3200E8CC85 /* ApClock */ = {
 			isa = PBXGroup;
 			children = (
-				A6DD899F1F22C48700020904 /* DSEG7Modern-Regular.ttf */,
 				A62C6D281F22BE3200E8CC85 /* AppDelegate.swift */,
 				A62C6D2A1F22BE3200E8CC85 /* ClockViewController.swift */,
 				A62C6D2C1F22BE3200E8CC85 /* Assets.xcassets */,
@@ -381,7 +378,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6DD89A01F22C48700020904 /* DSEG7Modern-Regular.ttf in Resources */,
 				A62C6D2D1F22BE3200E8CC85 /* Assets.xcassets in Resources */,
 				A62C6D301F22BE3200E8CC85 /* Main.storyboard in Resources */,
 			);

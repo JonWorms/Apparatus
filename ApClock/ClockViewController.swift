@@ -8,42 +8,64 @@
 
 import Cocoa
 
+extension DateFormatter {
+	func hourString(from date: Date) -> String {
+		self.dateFormat = "HH"
+		return self.string(from: date)
+	}
+	
+	func minuteString(from date: Date) -> String {
+		self.dateFormat = "mm"
+		return self.string(from: date)
+	}
+	
+	func secondString(from date: Date) -> String {
+		self.dateFormat = "ss"
+		return self.string(from: date)
+	}
+	
+
+	func todayString(from date: Date) -> String {
+		self.dateFormat = "EEEE, MMM d"
+		return self.string(from: date)
+	}
+	
+	
+}
+
+
+
+
+
 class ClockViewController: NSViewController {
+
 
 	@IBOutlet var hours: NSTextField!
 	@IBOutlet var minutes: NSTextField!
 	@IBOutlet var seconds: NSTextField!
-	
-	@IBOutlet var leftColon: NSTextField!
-	@IBOutlet var rightColon: NSTextField!
+	@IBOutlet var date: NSTextField!
 	
 	let textColor: NSColor = NSColor.white
 	var showColons: Bool = true
 	var timer: Timer!
 	
-	var hourFormatter: DateFormatter = DateFormatter()
-	var minuteFormatter: DateFormatter = DateFormatter()
-	var secondFormatter: DateFormatter = DateFormatter()
+	var formatter: DateFormatter = DateFormatter()
+	var calendar: Calendar = Calendar(identifier: .gregorian)
+
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		hours.textColor = textColor
+		hours.textColor   = textColor
 		minutes.textColor = textColor
 		seconds.textColor = textColor
-		leftColon.textColor = textColor
-		rightColon.textColor = textColor
-		
-		hourFormatter.dateFormat = "HH"
-		minuteFormatter.dateFormat = "mm"
-		secondFormatter.dateFormat = "ss"
-		
-		
+		date.textColor    = textColor
+
 		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {(t: Timer) in
-		
 			self.updateTime()
 		})
-
+		
+		
 		// Do any additional setup after loading the view.
 	}
 
@@ -54,6 +76,8 @@ class ClockViewController: NSViewController {
 	}
 
 	override func viewWillAppear() {
+		//self.view.window?.backgroundColor = NSColor.clear
+
 		super.viewWillAppear()
 	}
 	
@@ -67,19 +91,11 @@ class ClockViewController: NSViewController {
 	}
 	
 	func updateTime() {
-		
-		//OperationQueue.main.addOperation {
-			self.leftColon.isHidden = self.showColons
-			self.rightColon.isHidden = self.showColons
-			self.showColons = !self.showColons
-			
-			let date = Date()
-			self.hours.stringValue = self.hourFormatter.string(from: date)
-			self.minutes.stringValue = self.minuteFormatter.string(from: date)
-			self.seconds.stringValue = self.secondFormatter.string(from: date)
-		//}
-		
-
+		let date = Date()
+		self.hours.stringValue   = self.formatter.hourString(from: date)
+		self.minutes.stringValue = self.formatter.minuteString(from: date)
+		self.seconds.stringValue = self.formatter.secondString(from: date)
+		self.date.stringValue    = self.formatter.todayString(from: date)
 	}
 	
 	
